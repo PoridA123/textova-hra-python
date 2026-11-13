@@ -1,0 +1,318 @@
+import random
+
+vyhra= "vyhra" * 100
+inventar=[]
+newline= "-" * 100
+pohyb_storage = []
+damage_storage = []
+health = [100]
+armor=[]
+shield=[]
+enemy_health = []
+items_1= ["shield","mec"]
+loot=[]
+loot_2=[]
+#tohle jsou vsechny values co se pouzivaji ve hre
+
+# a veschno co jsem opravil rozumim proc funguje klidne me vyskousej
+
+#exit(0) funguje v terminalu nepouzivam jupiter notebook
+
+#a kdyz porazis enemaka a on te muze zabit porad ve stejnem kole to chci aby se stalo je to takovy ze se zabyjete navzajem
+    
+
+#tohle je smrt kdyz zivoty dostanes na 0
+def smrt():
+     if health[0] <=0:
+        print("ale ne jsi mrtev skoda zkus to znova PROHRA")
+        exit(0)
+
+#tohle je inventar
+def storage():
+    while True:
+        print(f"tady to mas v inventori {inventar}")
+        print(newline)
+        choice = input("vyber si z moznosti co mas v invenatri (nebo napis zpet): ").strip().lower()
+        if choice == "zpet":
+            break
+
+        if choice not in inventar:
+            print("to nemas v inventari")
+            continue
+
+        if choice == "nuz":
+            enemy_health[0] -= 20
+            damage_storage.clear()
+            damage_storage.append(20)
+            cyclus()
+            print("bodnul jsi nozem")
+            print(newline)
+            smrt()
+            break
+
+        elif choice == "armor":
+            armor.append("w")
+            inventar.remove("armor")
+            print("armor equiped")
+            print(newline)
+            smrt()
+            break
+
+        elif choice == "potion":
+            health.clear()
+            health.append(100)
+            inventar.remove("potion")
+            print("potion vypitej")
+            print(newline)
+            smrt()
+            break
+
+        elif choice == "mec":
+            enemy_health[0] -= 25
+            damage_storage.clear()
+            damage_storage.append(25)
+            print("seknul jsi mecem")
+            cyclus()
+            smrt()
+            break
+
+        elif choice == "shield":
+            shield.append("w")
+            inventar.remove("shield")
+            print("dal  jsi shield na ruku a jdes se s nim branit")
+            print(newline)
+            smrt()
+            break
+
+#tohle kontroluje jestli inventar muzes pouzit jestli jo tak te to necha kdzy ne tak te to nenecha
+
+def pre_storage():
+    if len(inventar) == 0:
+        print("nic nemas nemuses to pouzit")
+    else:
+        storage()
+
+
+#thole je kdyz se dostanes do boje tak aby jsi si vybral co udelas
+def fight():
+    while enemy_health[0] > 0:
+        while True:
+            print(newline)
+            press=input("Co chces udelat? F pro fight, I inventori: ").upper()
+            if press == "F":
+                utok()
+                print("dal jsi uder pesti")
+                print(newline)
+                break
+            elif press == "I":
+                pre_storage()
+                break
+            else:
+                print("blby zvoleni")
+
+        if damage_storage:
+            print(f"tvuj health {health[0]}")
+            print(f"tvuj damage tohle kolo {damage_storage[0]}")
+            print(f"enemy health {max(enemy_health[0], 0)}")
+            damage_storage.clear()
+
+    smrt()
+
+    
+        
+#tohle kontroluje kolik dostanes damage podhle toho co jsi si dal na sebe nebo pouzil
+def cyclus():
+    if shield and armor:
+        damage = random.choice([0, 0, 3, 4])
+        health[0] -= damage
+        smrt()
+    elif shield:
+        damage = random.choice([1, 7, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0])
+        health[0] -= damage
+        smrt()
+    elif armor:
+        damage = random.randint(1, 4)
+        health[0] -= damage
+        smrt()
+    else:
+        damage = random.randint(1, 7)
+        health[0] -= damage
+        print(newline)
+        smrt()
+
+
+
+#tohle se stane kdyz ve fight das f tak enemy dostane damage
+def utok():
+    damage=int(random.choice([1, 4, 12, 25, 17, 19,]))
+    damage_storage.clear()
+    damage_storage.append(damage)
+    enemy_health[0] -= damage
+    cyclus()
+    smrt()
+
+    
+
+#tohle je pohyb diky nemu se pohibujes v roomkach
+def pohyb(): #pomoci ai mi pordilo jak udelat ale vsechno jsem psal sam a zbusob taky vymislel sam
+    while True:
+        move = input("kam se chces pohybovat? muzes pouzit jenom w,a,s,d: ").upper()
+        if move in ["W","S","D","A"]:
+            pohyb_storage.clear()
+            pohyb_storage.append(move)
+            print(newline)
+            print(move)
+            print(newline)
+            break
+        else:
+            print("blby input")
+
+
+
+#tohle je roomka kde si vyberes veci po tom co si porazil big enemy
+def loot_room():
+    while True:
+        print("dosel jsi do roomky kde si muzes vybrat jenom jednu vec co si vyberes?")
+        print(newline)
+        vybrani=input("mas tady mec dava permanent 25 damage , shield ma 50 procent sanci na block attacku: ")
+        print(newline)
+        if vybrani in items_1:
+            inventar.append(vybrani)
+            loot.append("w")
+            print(f"nice vzal jsi si {vybrani} ")
+            return
+        else:
+                print("neco si musis vybrat jinak neodejdes")
+                print(newline)
+
+
+
+
+#tohle je final roomka konec hry
+def final():
+    print("ale ne pred tebou je obrovska potvora tohle nebude lehke doufam ze jsi pripraven")
+    enemy_health.clear()
+    enemy_health.append(300)
+    fight()
+    print(newline)
+    print("ty jsi to dal vyhral jsi nad potvorou skolil jsi nemozne ty jsi to fakt dal pred tebou se otevrel portal a ty jsi stoupil do neho KONEC VYHRA")
+    print(newline)
+    print(vyhra)
+    exit(0)
+
+
+#tohle se stane kdyz v big room jdes do prava
+def death():
+    print("zacal si vystupovat po schodach nahoru uz vidis slunce ha jsi na povrchu")
+    print(newline)
+    print("ale najednou se pod tebou propadla zem a zacal si padat hahah jsi si myslel ze tak lehce uteces? KONEC PROHRA")
+    exit(0)
+
+def lootchec():
+    if len(loot_2) == 0:
+        while True:
+            print(newline)
+            print("koukas se kolem a zahledl jsi potion a armor chces si je vzit?")
+            print(newline)
+            pot=input("ano/ne: ")
+            print(newline)
+            pot=pot.upper()
+            
+            if pot == "ANO":
+                inventar.append("potion")
+                inventar.append("armor")
+                loot_2.append("w")
+                print(f"tohle je tvuj inventar ted {inventar}")
+                print(newline)
+                break
+                
+                
+                            
+            
+            elif pot == "NE":
+                print("ok no")
+                print(newline)
+                break
+            
+                                
+            
+            else:
+                print("blby input")
+                print(newline)
+
+
+#tohle je main room odsud si vyberes kam chces jit a mas tady i veci co si muzes vzit kdyz si je vezmes tak uz si je znovu nemuzes vzit ale kdyz si je nevemzmes tak muzes si znovu vzit jenom kdyz se vratis z lootroom jinak ne
+def big_room():
+        while True:
+            lootchec()
+            pohyb()
+            if pohyb_storage == ["W"] and len(loot) == 0:
+                print("dosel jsi do chodby pred tebou je znovu do mistnosti ale je o hodne vetsi nez ten pred tim ale ne je tu nekdo")
+                print(newline)
+                enemy_health.clear()
+                enemy_health.append(150)
+                print(newline)
+                print("psst napoveda kdyz pouzivas zbran tak ji v inventori musis pouzivat dokola a kdyz pouzijes armor tak ho staci jenom jednou a mas ho na celou hru a potion ti da health na 100 ale jenom jednou se da pouzit a kdyz pouzijes zbran z inventory tak dostanes damage")
+                print(newline)
+                fight()
+                loot_room()
+            elif  pohyb_storage == ["W"] and len(loot) == 1:
+                    print("prisel si zpet do roomky ale uz si nic nemuzes vzit takze jsi se vratil")
+            elif pohyb_storage == ["S"]:
+                    print("tam nic neni je to zabraneni proc jdes zpatky?")
+                    print(newline)
+            elif pohyb_storage == ["A"]:
+                final()
+            elif pohyb_storage == ["D"]:
+                    death()  
+
+
+# tohle je zacatek diky tomudhle se zacina hra
+def zacatek():
+    while True:
+        jmeno=input("Ahoj hrdino jak se jmenujes?: ").strip().lower() 
+        if jmeno == "":
+            print("nic tam nemas udelej to znovu")
+        else:
+            print(newline)
+            print(f"ahoj {jmeno} nic moc ti nemuzu rict o tomhle svete jedinou vec co potrebujes vedet ze jsi v podzemi a potrebujes se dostat nahoru hodne stesti {jmeno}")
+            print(newline)
+            break
+
+    while True:
+        pohyb()
+        if pohyb_storage == ["W"]:
+            print("dosel jsi do chodby pred tebou ale stoji obrovsky muz vypada to ze budes muset bojovat")
+            break 
+        else:
+            print("blbe napis nic tam neni znovu")
+
+    print(newline)
+    enemy_health.append(100)
+    fight()
+    print("vyhra")
+    print(newline)
+    print("Supr porazil si muze a nasel si na nem nuz chces si ho vzit?")
+    print(newline)
+    while True:
+        nuze = input("vezmes si nuz dava permanent 20 damage ano nebo ne: ")
+        nuze = nuze.upper()
+        if nuze == "ANO":
+            inventar.append("nuz")
+            break
+
+        elif nuze == "NE":
+            print("ok no")
+            break
+
+        else:
+            print("hmmm blby input")
+
+    print(newline)
+    print(f"tvuj novy inventar{inventar}")
+    print(newline)
+    print("dosel jsi do velke mistnosti rovne muzes videt mec a stit ale vypada to jako kdyby to nekdo chranil na pravu vydis schody a svetlo vypada to jako vychod a do leva vidis jenom temnotu co udelas?")
+    big_room()
+
+
+zacatek()
