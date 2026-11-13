@@ -1,65 +1,60 @@
-Dungeon – textová RPG hra
+Projekt Python Text Based Hra
 
-Jednoduchá textová hra pro terminál napsaná v Pythonu. Jsi hrdina uvězněný v podzemí a musíš se dostat nahoru. Cestou bojuješ s nepřáteli, sbíráš předměty a nakonec čelíš obrovské potvoře.
+Textová hra v Pythonu, kterou hraješ přímo v terminálu. Probouzíš se v podzemí a tvým cílem je dostat se na povrch. Cestou bojuješ s nepřáteli, sbíráš zbraně i výbavu a rozhoduješ se, kudy půjdeš dál.
 
-Požadavky
-Python 3.6+
-Žádné externí knihovny (používá se jen random)
-Spuštění
+Obsah
+O hře
+Jak hru spustit
+Ovládání
+Předměty
+Tipy
+Autor
+O hře
+Hraješ za hrdinu, který uvízl v podzemí.
+Pohybuješ se po místnostech pomocí kláves W, A, S, D.
+Bojuješ s nepřáteli, kteří ti mohou v boji také ublížit.
+Sbíráš předměty (zbraně, štít, brnění, lektvar) a vybíráš si, co použiješ.
+Hra končí výhrou, nebo prohrou (například když ti klesne zdraví na 0).
+Jak hru spustit
+Nainstaluj Python 3 – stáhneš ho na python.org.
+Stáhni projekt (nebo ho naklonuj):
 bash
-python hra.py
+   git clone https://github.com/PoridA123/textova-hra-python.git
+Přejdi do složky projektu:
+bash
+   cd textova-hra-python
+Spusť hru:
+bash
+   python projekt.txt
 
-Hru spouštěj v normálním terminálu (ne v Jupyter Notebooku), protože se ukončuje pomocí exit(0).
+Na některých systémech místo python použij python3.
+
+Hru spouštěj v terminálu, ne v Jupyter Notebooku (hra používá exit(0)).
 
 Ovládání
-Vstup	Význam
-W A S D	pohyb mezi místnostmi
-F	v boji: útok pěstí
-I	v boji: otevřít inventář
-ano / ne	potvrzení výběru předmětu
-zpet	zavřít inventář
-Jak hra probíhá
-Začátek – zadáš jméno a jdeš W do chodby, kde stojí obrovský muž (100 HP).
-První souboj – po výhře můžeš získat nůž (+20 damage).
-Velká místnost – tady se rozhoduješ, kam dál:
-W – boj s dalším nepřítelem (150 HP), po výhře si vybereš jednu odměnu: meč (25 damage) nebo štít (50 % šance na blok).
-A – finální boss (300 HP). Když ho porazíš, hra končí výhrou.
-S – nic tam není, vrátíš se zpět.
-D – schody na povrch, ale… je to past (konec hry – prohra).
-Ve velké místnosti si také můžeš vzít lektvar a brnění (jednorázově).
-Souboj
 
-Boj je kolový. V každém kole zaútočíš ty a nepřítel ti hned oplatí – může se stát, že se zabijete navzájem v jednom kole.
+Vše zadáváš psaním do terminálu a potvrzuješ klávesou Enter.
 
-Pěst – náhodný damage (1, 4, 12, 17, 19 nebo 25).
-Zbraně (nůž, meč) – použiješ je z inventáře, dají pevný damage a dají se používat opakovaně.
-Brnění – stačí vybavit jednou, platí do konce hry.
-Štít – vybavíš jednou, platí do konce hry.
-Lektvar – obnoví zdraví na 100, jde použít jen jednou.
-Damage, který dostaneš od nepřítele
-Vybavení	Damage za kolo
-nic	1–7
-brnění	1–4
-štít	0–7 (přibližně 50 % šance na 0)
-štít + brnění	0, 0, 3 nebo 4
+Situace	Co zadáš
+Začátek hry	své jméno
+Pohyb po místnostech	W, A, S, D
+V boji	F – útok pěstí, I – otevřít inventář
+V inventáři	název předmětu (např. mec), nebo zpet
+Otázky ano/ne	ano nebo ne
+Výběr odměny v místnosti	mec nebo shield
+Předměty
+Předmět	Účinek
+nuz	útok se 20 damage
+mec	útok s 25 damage
+shield	snižuje damage, který dostaneš
+armor	snižuje damage, který dostaneš
+potion	obnoví zdraví na 100
+Tipy
+Zbraň (nuz, mec) musíš v inventáři používat při každém útoku znovu a při jejím použití dostaneš také damage.
+armor stačí použít jednou, platí do konce hry.
+potion se dá použít jen jednou.
+V jedné z místností si můžeš vzít jen jednu věc, rozmysli se dobře.
+Ne každá cesta vede k cíli, a ne každá je bezpečná.
+Autor
 
-Pokud zdraví klesne na 0, hra končí prohrou.
-
-Struktura kódu
-Funkce	Popis
-zacatek()	úvod hry, jméno, první souboj
-big_room()	hlavní místnost, výběr směru
-lootchec()	nabídka lektvaru a brnění
-loot_room()	výběr odměny po druhém bossovi
-final()	finální souboj a konec hry
-death()	falešný východ – prohra
-fight()	smyčka souboje
-utok()	útok pěstí
-cyclus()	výpočet damage, který dostane hráč
-storage() / pre_storage()	inventář a jeho kontrola
-pohyb()	načtení pohybu W/A/S/D
-smrt()	kontrola smrti hráče
-Herní data
-
-Stav hry je uložen v globálních seznamech: inventar, health, enemy_health, armor, shield, loot, loot_2, damage_storage, pohyb_storage.
-
+PoridA123 – github.com/PoridA123
